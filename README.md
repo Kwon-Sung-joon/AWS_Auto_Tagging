@@ -17,8 +17,6 @@ AWS_Auto_Tagging
 
 
 	3. Lambda에 부여 할 IAM 역할 생성 (아래 정책 부여)
-#### Lambda 정책 ###
-lambda_policy.json 참고
 
 
 ![image](https://user-images.githubusercontent.com/43159901/133211567-0801640b-3b05-44b2-bc57-3900d7ccd750.png)
