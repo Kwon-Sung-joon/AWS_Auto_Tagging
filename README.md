@@ -68,3 +68,25 @@ AWS_Auto_Tagging
 
 
 ![image](https://user-images.githubusercontent.com/43159901/133211567-0801640b-3b05-44b2-bc57-3900d7ccd750.png)
+	
+	
+
+	4. Lambda 생성
+	- Python 3.8 사용
+	- 앞서 생성한 역할 연결
+
+
+	- 함수 생성 후 '일반 구성'에서 함수 제한 시간 1분으로 늘리기
+
+
+
+	5. CloudWatch Event 생성
+
+
+	- 람다 트리거 지정
+
+
+
+
+![image](https://user-images.githubusercontent.com/43159901/133211681-87c958a1-4d25-4706-987e-27516eafa4ab.png)
+
