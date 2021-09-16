@@ -387,7 +387,9 @@ def lambda_handler(event, context):
   
     if event['detail']['eventName'] == 'CreateSecurityGroup':
         addSecurityGroupTag(event,user_name,tag_list);
-        
+      
+    if event['detail']['eventName'] == 'CreateSubnet':
+        addSubnetTag(event,user_name,tag_list);
         
         
         
