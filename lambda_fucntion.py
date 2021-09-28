@@ -283,6 +283,54 @@ def addSubnetTag(event,user_name,tag_list):
                 'body': json.dumps('No Data!')
             }
         
+
+
+def addRouteTableTag(event,user_name,tag_list):
+
+        try:
+            routeTable_id = event['detail']['responseElements']['routeTable']['routeTableId']
+        except Exception as e:
+            routeTable_id = []
+        
+        aws_region = event['detail']['awsRegion']
+        
+        if routeTable_id:
+            client = boto3.resource('ec2', region_name=aws_region).RouteTable(routeTable_id)
+
+
+            if client.tags:
+                    routeTable_tags = client.tags
+            else:
+                    routeTable_tags = []
+            if routeTable_tags:
+                if not any(keys.get('Key') == 'Owner' for keys in routeTable_tags):
+                    logging.info(f'Tag "Owner" doesn\'t exist for routeTable {routeTable_id}, creating...')
+                    idx = next(( i for (i,item) in enumerate(tag_list) if item['Key'] == 'Name'),None);
+                    tag_list[idx]['Value'] += ('-'+ routeTable_id)
+                    aws_create_tag(aws_region, routeTable_id, tag_list)
+                else:
+                    logging.info(f'Owner tag already exist for routeTable {routeTable_id}')
+            else:
+                logging.info(f'routeTable {routeTable_id} has no tags, let\'s tag it with Owner tag')
+                idx = next(( i for (i,item) in enumerate(tag_list) if item['Key'] == 'Name'),None);
+                tag_list[idx]['Value'] += ('-'+ routeTable_id)
+                aws_create_tag(aws_region, routeTable_id, tag_list)
+        
+            return {
+                'user_name' : user_name,
+                'statusCode': 200,
+                'body': json.dumps('All Done!')
+            }
+        else:
+            return {
+                'user_name' : user_name,
+                'statusCode': 200,
+                'body': json.dumps('No Data!')
+            }
+    
+    
+    
+        
 def addS3Tag(event,user_name,tag_list):
 
         try:
@@ -436,5 +484,9 @@ def lambda_handler(event, context):
     if event['detail']['eventName'] == 'CreateSubnet':
         addSubnetTag(event,user_name,tag_list);
         
+    if event['detail']['eventName'] == 'CreateRouteTable':
+        addRouteTableTag(event,user_name,tag_list);
         
+        
+                
         
