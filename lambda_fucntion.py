@@ -237,7 +237,52 @@ def addVpcTag(event,user_name,tag_list):
                 'statusCode': 200,
                 'body': json.dumps('No Data!')
             }
+        
+def addSubnetTag(event,user_name,tag_list):
+        
+        
+        
+        try:
+            subnet_id = event['detail']['responseElements']['subnet']['subnetId']
+        except Exception as e:
+            subnet_id = []
+        
+        aws_region = event['detail']['awsRegion']
+        
+        if subnet_id:
+            client = boto3.resource('ec2', region_name=aws_region).Subnet(subnet_id)
 
+
+            if client.tags:
+                    subnet_tags = client.tags
+            else:
+                    subnet_tags = []
+            if subnet_tags:
+                if not any(keys.get('Key') == 'Owner' for keys in subnet_tags):
+                    logging.info(f'Tag "Owner" doesn\'t exist for subnet {subnet_id}, creating...')
+                    idx = next(( i for (i,item) in enumerate(tag_list) if item['Key'] == 'Name'),None);
+                    tag_list[idx]['Value'] += ('-'+ subnet_id)
+                    aws_create_tag(aws_region, subnet_id, tag_list)
+                else:
+                    logging.info(f'Owner tag already exist for subnet {subnet_id}')
+            else:
+                logging.info(f'Subnet {subnet_id} has no tags, let\'s tag it with Owner tag')
+                idx = next(( i for (i,item) in enumerate(tag_list) if item['Key'] == 'Name'),None);
+                tag_list[idx]['Value'] += ('-'+ subnet_id)
+                aws_create_tag(aws_region, subnet_id, tag_list)
+        
+            return {
+                'user_name' : user_name,
+                'statusCode': 200,
+                'body': json.dumps('All Done!')
+            }
+        else:
+            return {
+                'user_name' : user_name,
+                'statusCode': 200,
+                'body': json.dumps('No Data!')
+            }
+        
 def addS3Tag(event,user_name,tag_list):
 
         try:
