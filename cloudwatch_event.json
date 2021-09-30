@@ -1,0 +1,23 @@
+{
+  "source": [
+    "aws.ec2",
+    "aws.s3"
+  ],
+  "detail-type": [
+    "AWS API Call via CloudTrail"
+  ],
+  "detail": {
+    "eventSource": [
+      "ec2.amazonaws.com",
+      "s3.amazonaws.com"
+    ],
+    "eventName": [
+      "RunInstances",
+      "CreateBucket",
+      "CreateVpc",
+      "CreateSecurityGroup",
+      "CreateSubnet",
+      "CreateRouteTable"
+    ]
+  }
+}
